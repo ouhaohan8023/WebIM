@@ -32,7 +32,6 @@ $ws->on('message', function ($ws, $frame) {
     foreach ($Arr as $v) {
         echo '【用户'.$frame->fd.'】广播给【用户'.$v.'】:'.$msg."\n";
         $re = $ws->push(intval($v), $msg);
-        echo $re;
     }
 });
 
