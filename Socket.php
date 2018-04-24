@@ -19,20 +19,21 @@ $ws->on('open', function ($ws, $request) {
         $ws->redis->set('str', $str.$request->fd.';');
     }
     $ws->push($request->fd, "hello, welcome\n");
-    echo '用户'.$request->fd.",进入\n";
+    $msg = '【用户'.$request->fd."】进入\n";
+    sendToAll($request, $ws, $msg, 1);
+    echo $msg;
 });
 
 /*
  * 监听WebSocket消息事件
  */
 $ws->on('message', function ($ws, $frame) {
-    $str = $ws->redis->get('str');
-    $Arr = explodeStr($str);
     $msg = '【用户'.$frame->fd."】说:{$frame->data}\n";
-    foreach ($Arr as $v) {
-        echo '【用户'.$frame->fd.'】广播给【用户'.$v.'】:'.$msg."\n";
-        $re = $ws->push(intval($v), $msg);
-    }
+    sendToAll($frame, $ws, $msg, 1);
+//    foreach ($Arr as $v) {
+//        echo '【用户'.$frame->fd.'】广播给【用户'.$v.'】:'.$msg."\n";
+//        $re = $ws->push(intval($v), $msg);
+//    }
 });
 
 /*
@@ -51,10 +52,12 @@ $ws->on('close', function ($ws, $fd) {
                 unset($Arr[$k]);
             } else {
                 $string = $string.$v.';';
-                $ws->redis->set('str', $string);
             }
         }
-        echo '用户'.$fd."退出\n";
+        $ws->redis->set('str', $string);
+        $msg = '【用户'.$fd."】退出\n";
+        sendToAll($fd, $ws, $msg, 2);
+        echo $msg;
     }
 });
 
@@ -73,4 +76,22 @@ function explodeStr($str)
     $Arr = explode(';', $str);
 
     return $Arr;
+}
+
+/**
+ * 群发给$Arr.
+ */
+function sendToAll($frame, $ws, $msg, $status)
+{
+    $str = $ws->redis->get('str');
+    $Arr = explodeStr($str);
+    if (1 == $status) {
+        $id = $frame->fd;
+    } else {
+        $id = $frame;
+    }
+    foreach ($Arr as $v) {
+        echo '【用户'.$id.'】广播给【用户'.$v.'】:'.$msg."\n";
+        $ws->push(intval($v), $msg);
+    }
 }
