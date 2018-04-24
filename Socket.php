@@ -3,12 +3,12 @@
 //创建websocket服务器对象，监听0.0.0.0:9502端口
 $ws = new swoole_websocket_server('0.0.0.0', 9502);
 $ws->redis = new Redis();
+$ws->redis->connect('127.0.0.1');
 
 /*
  * 监听WebSocket连接打开事件
  */
 $ws->on('open', function ($ws, $request) {
-    $ws->redis->connect('127.0.0.1');
     if (1 == $request->fd) {
         $ws->redis->set('str', '');
     }
@@ -30,8 +30,9 @@ $ws->on('message', function ($ws, $frame) {
     $Arr = explodeStr($str);
     $msg = '【用户'.$frame->fd."】说:{$frame->data}\n";
     foreach ($Arr as $v) {
-        echo '【用户'.$frame->fd.'】广播给【用户'.$v.'】:'.$msg;
-        $ws->push(intval($v), $msg);
+        echo '【用户'.$frame->fd.'】广播给【用户'.$v.'】:'.$msg."\n";
+        $re = $ws->push(intval($v), $msg);
+        echo $re;
     }
 });
 
