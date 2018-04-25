@@ -68,14 +68,25 @@ $ws->start();
  *
  * @param $str
  *
- * @return array
+ * @return bool|string
  */
 function explodeStr($str)
 {
-    $str = rtrim($str, ';');
-    $Arr = explode(';', $str);
+    if (2 == strlen($str)) {
+        //只有一个数据 3;
+        $Arr[] = substr($str, 0, 1);
+//        print_r($Arr);
+        return $Arr;
+    } elseif (empty($str)) {
+        $Arr = [];
 
-    return $Arr;
+        return $Arr;
+    } else {
+        $str = rtrim($str, ';');
+        $Arr = explode(';', $str);
+
+        return $Arr;
+    }
 }
 
 /**
@@ -91,13 +102,12 @@ function sendToAll($frame, $ws, $msg, $status)
         $id = $frame;
     }
     foreach ($Arr as $v) {
-        if($id == $v){
+        if ($id == $v) {
             echo '【用户'.$id.'】广播给【用户'.$v.'】:'.$msg."\n";
             $ws->push(intval($v), '<b style="color: crimson">【我】'.$msg.'</b>');
-        }else{
-            echo '【用户'.$id.'】广播给【用户'.$v.'】:'.$msg."\n";
+        } else {
+            echo '【[用户'.$id.'】广播给【用户'.$v.'】:'.$msg."\n";
             $ws->push(intval($v), $msg);
         }
-
     }
 }
