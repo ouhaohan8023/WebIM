@@ -4,6 +4,22 @@
 $ws = new swoole_websocket_server('0.0.0.0', 9502);
 $ws->redis = new Redis();
 $ws->redis->connect('127.0.0.1');
+$i = 0; //定时任务重复次数，无意义
+$ws->redis->set('PeopleNum', 0); //当前聊天室人数
+/*
+ * 监听WebSocket开始事件
+ */
+$ws->on('start', function ($ws) {
+    //定时任务
+//    swoole_timer_tick(1000, function ($timeId, $params) use (&$i) {
+//        $i ++;
+//        echo "hello, {$params} --- {$i}\n";
+//        if ($i >= 5) {
+//            swoole_timer_clear($timeId);
+//        }
+//    }, 'world');
+    //推送到前端
+});
 
 /*
  * 监听WebSocket连接打开事件
@@ -18,9 +34,17 @@ $ws->on('open', function ($ws, $request) {
     } else {
         $ws->redis->set('str', $str.$request->fd.';');
     }
-    $ws->push($request->fd, "hello, welcome\n");
+    $toFront['text'] = "欢迎来到基佬论坛！\n";
+    $jsonToFront = json_encode($toFront);
+    $ws->push($request->fd, $jsonToFront);
+
+    $num = $ws->redis->get('PeopleNum');
+    ++$num;
+    $ws->redis->set('PeopleNum', $num);
+
     $msg = '【用户'.$request->fd."】进入\n";
     sendToAll($request, $ws, $msg, 1);
+    sendToAllNumber($ws, $num);
     echo $msg;
 });
 
@@ -57,6 +81,12 @@ $ws->on('close', function ($ws, $fd) {
         $ws->redis->set('str', $string);
         $msg = '【用户'.$fd."】退出\n";
         sendToAll($fd, $ws, $msg, 2);
+
+        $num = $ws->redis->get('PeopleNum');
+        --$num;
+        $ws->redis->set('PeopleNum', $num);
+
+        sendToAllNumber($ws, $num);
         echo $msg;
     }
 });
@@ -103,11 +133,35 @@ function sendToAll($frame, $ws, $msg, $status)
     }
     foreach ($Arr as $v) {
         if ($id == $v) {
-            echo '【用户'.$id.'】广播给【用户'.$v.'】:'.$msg."\n";
-            $ws->push(intval($v), '<b style="color: crimson">【我】'.$msg.'</b>');
+            echo '【用户'.$id.'】广播给【用户'.$v.'】:'.$msg;
+            $toFront['text'] = '<b style="color: crimson">【我】'.$msg.'</b>';
+            $jsonToFront = json_encode($toFront);
+            $ws->push(intval($v), $jsonToFront);
         } else {
-            echo '【[用户'.$id.'】广播给【用户'.$v.'】:'.$msg."\n";
-            $ws->push(intval($v), $msg);
+            echo '【用户'.$id.'】广播给【用户'.$v.'】:'.$msg;
+            $toFront['text'] = $msg;
+            $jsonToFront = json_encode($toFront);
+            $ws->push(intval($v), $jsonToFront);
         }
+    }
+}
+
+/**
+ * 更新在线人数.
+ *
+ * @param $ws
+ * @param $msg
+ */
+function sendToAllNumber($ws, $msg)
+{
+    $str = $ws->redis->get('str');
+    $Arr = explodeStr($str);
+//    print_r($Arr);
+    foreach ($Arr as $v) {
+        $toFront['ppp'] = $msg;
+        $jsonToFront = json_encode($toFront);
+//        echo $jsonToFront."\n";
+//        echo intval($v);
+        $ws->push(intval($v), $jsonToFront);
     }
 }
