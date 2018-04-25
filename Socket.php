@@ -91,7 +91,13 @@ function sendToAll($frame, $ws, $msg, $status)
         $id = $frame;
     }
     foreach ($Arr as $v) {
-        echo '【用户'.$id.'】广播给【用户'.$v.'】:'.$msg."\n";
-        $ws->push(intval($v), $msg);
+        if($id == $v){
+            echo '【用户'.$id.'】广播给【用户'.$v.'】:'.$msg."\n";
+            $ws->push(intval($v), '<b style="color: crimson">【我】'.$msg.'</b>');
+        }else{
+            echo '【用户'.$id.'】广播给【用户'.$v.'】:'.$msg."\n";
+            $ws->push(intval($v), $msg);
+        }
+
     }
 }

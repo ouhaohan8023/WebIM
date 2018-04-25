@@ -22,7 +22,7 @@ PS. 这个版本真的是超级简易版，有很多问题。
 * 聊天数据没有存储
 * ~~单页面重复刷新，会出现`WARNING swManager_check_exit_status: worker#1 abnormal exit, status=0, signal=11`这个Warning，并且无法新增用户，目前没有找到解决办法~~
 * 界面丑
-* 目前无法识别是不是自己发出的消息
+* ~~目前无法识别是不是自己发出的消息~~
 
 总体只能说是一个Demo，可以在这个基础上大力开发。
 
