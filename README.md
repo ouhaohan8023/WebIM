@@ -5,10 +5,11 @@
 2018-04-26更新
 增加WebSocketClient相关，使
 >PHP进程可以创建一个websocket客户端与WebSocket服务器通信，发送消息转发的指令。
+
 使用方法为
-(1)在终端运行Socket.php
-(2)在浏览器中运行Socket.html
-(3)浏览器中SocketClient.php
+1. 在终端运行`Socket.php`
+2. 在浏览器中运行`Socket.html`
+3. 浏览器中`SocketClient.php`
 ***
 
 本机运行环境如下：
