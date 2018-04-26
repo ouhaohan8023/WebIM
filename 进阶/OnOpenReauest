@@ -1,0 +1,43 @@
+//WebSocket->OnOpen,返回的$request
+
+Swoole\Http\Request Object
+(
+    [fd] => 1
+    [header] => Array
+    (
+        [host] => 100.100.0.223:9502
+        [connection] => Upgrade
+        [pragma] => no-cache
+        [cache-control] => no-cache
+        [upgrade] => websocket
+        [origin] => http://100.100.0.223
+        [sec-websocket-version] => 13
+        [user-agent] => Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36
+        [accept-encoding] => gzip, deflate
+        [accept-language] => zh-CN,zh;q=0.9
+        [sec-websocket-key] => M9nkHLERFe+NI1nMG2qgjQ==
+        [sec-websocket-extensions] => permessage-deflate; client_max_window_bits
+    )
+
+    [server] => Array
+    (
+        [request_method] => GET
+        [request_uri] => /
+        [path_info] => /
+        [request_time] => 1524716595
+        [request_time_float] => 1524716595.8934
+        [server_port] => 9502
+        [remote_port] => 61354
+        [remote_addr] => 100.100.0.152
+        [master_time] => 1524716595
+        [server_protocol] => HTTP/1.1
+        [server_software] => swoole-http-server
+    )
+
+    [request] =>
+    [cookie] =>
+    [get] =>
+    [files] =>
+    [post] =>
+    [tmpfiles] =>
+)

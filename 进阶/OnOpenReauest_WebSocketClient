@@ -1,0 +1,40 @@
+//WebSocket->OnOpen,返回的$request
+//通过php调用SocketClient.php
+
+Swoole\Http\Request Object
+(
+    [fd] => 2
+    [header] => Array
+        (
+            [origin] =>
+            [host] => 100.100.0.223:9502
+            [sec-websocket-key] => RHNsT2x7bFExQ3BjaDl6dg==
+            [user-agent] => PHPWebSocketClient/0.1.4
+            [upgrade] => websocket
+            [connection] => Upgrade
+            [sec-websocket-protocol] => wamp
+            [sec-websocket-version] => 13
+        )
+
+    [server] => Array
+        (
+            [request_method] => GET
+            [request_uri] => /
+            [path_info] => /
+            [request_time] => 1524717051
+            [request_time_float] => 1524717051.9749
+            [server_port] => 9502
+            [remote_port] => 54942
+            [remote_addr] => 100.100.0.223
+            [master_time] => 1524717051
+            [server_protocol] => HTTP/1.1
+            [server_software] => swoole-http-server
+        )
+
+    [request] =>
+    [cookie] =>
+    [get] =>
+    [files] =>
+    [post] =>
+    [tmpfiles] =>
+)

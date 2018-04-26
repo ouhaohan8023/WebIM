@@ -1,6 +1,16 @@
 # WebIM
 基于Swoole-WebSocket的多人在线聊天
 
+***
+2018-04-26更新
+增加WebSocketClient相关，使
+>PHP进程可以创建一个websocket客户端与WebSocket服务器通信，发送消息转发的指令。
+使用方法为
+(1)在终端运行Socket.php
+(2)在浏览器中运行Socket.html
+(3)浏览器中SocketClient.php
+***
+
 本机运行环境如下：
 * PHP 7.1.7
 * Redis 3.1.0
